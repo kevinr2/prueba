@@ -1,4 +1,5 @@
 <?php
+include_once "./utils/enrutador.php";
 include_once "models/DB.php";
 include_once "controllers/ProductsController.php";
 

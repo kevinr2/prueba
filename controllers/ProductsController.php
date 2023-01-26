@@ -6,7 +6,7 @@ class ProductsController
     public function index()
     {
         $product = Product::all();
-        var_dump($product);
+        view("products.index", ["productos" => $product]);
     }
     public function find()
     {
