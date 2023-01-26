@@ -37,4 +37,20 @@ class Product extends DB
             ":fecha_creacion" => $this->fecha_creacion
         ]);
     }
+    public function update()
+    {
+        $prepare = $this->prepare("UPDATE inventario SET 
+        nombre_producto=:nombre_producto,referencia=:referencia,precio=:precio,peso=:peso,
+        categoria=:categoria,stock=:stock,fecha_creacion=:fecha_creacion WHERE id=:id");
+        $prepare->execute([
+            ":nombre_producto" => $this->nombre_producto, ":referencia" => $this->referencia,
+            ":precio" => $this->precio, ":peso" => $this->peso, ":categoria" => $this->categoria, ":stock" => $this->stock,
+            ":fecha_creacion" => $this->fecha_creacion, "id" => $this->id
+        ]);
+    }
+    public function delete()
+    {
+        $prepare = $this->prepare("DELETE FROM inventario WHERE id=:id");
+        $prepare->execute(["id" => $this->id]);
+    }
 }

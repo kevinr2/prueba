@@ -28,8 +28,19 @@ class ProductsController
 
     public function update()
     {
+        $product = Product::findOne(2);
+        $product->nombre_producto = "agua";
+        $product->referencia = "16b3f6";
+        $product->precio = "4500";
+        $product->peso = "8";
+        $product->categoria = "bebida";
+        $product->stock = "200";
+        $product->fecha_creacion = "2023-01-08";
+        $product->update();
     }
     public function delete()
     {
+        $product = Product::findOne(5);
+        $product->delete();
     }
 }
