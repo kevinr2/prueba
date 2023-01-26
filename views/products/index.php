@@ -56,8 +56,7 @@
                 <td><?php echo $producto->stock; ?></td>
                 <td><?php echo $producto->fecha_creacion; ?></td>
                 <td><button class="btn btn-success btn-sm editar" id="<?php echo $producto->id; ?>">editar</button></td>
-                <td><button class="btn btn-danger btn-sm">X</button></td>
-
+                <td><button class="btn btn-danger btn-sm eliminar" id="<?php echo $producto->id; ?>">X</button></td>
             </tr>
         <?php endforeach;
 
@@ -82,45 +81,47 @@
                         <form class="row">
                             <div class="col-7">
                                 <label for="" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" require>
+                                <input type="text" class="form-control" id="nombre_producto" name="nombre_producto" required>
                             </div>
                             <div class="col-5">
                                 <label for="" class="form-label">Refencia</label>
                                 <div class="input-group">
                                     <span class="input-group-text">#</span>
-                                    <input type="text" class="form-control " id="referencia" name="referencia" require>
+                                    <input type="text" class="form-control " id="referencia" name="referencia" required>
                                 </div>
                             </div>
                             <div class="col-5">
-                                <label for="" class="form-label">precio</label>
+                                <label for="" class="form-label">Precio</label>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control " onkeypress="return isNumberKey(this);" id="precio" name="precio" require>
+                                    <input type="number" class="form-control " onkeypress="return isNumberKey(this);" id="precio" name="precio" required>
                                 </div>
                             </div>
                             <div class=" col-5">
-                                <label for="" class="form-label">peso</label>
+                                <label for="" class="form-label">Peso</label>
                                 <div class="input-group">
-                                    <input type="number" class="form-control " onkeypress="return isNumberKey(this);" id="peso" name="peso" require>
+                                    <input type="number" class="form-control " onkeypress="return isNumberKey(this);" id="peso" name="peso" required>
                                     <span class=" input-group-text">kg</span>
                                 </div>
 
                             </div>
                             <div class="col-5">
-                                <label for="" class="form-label">categoria</label>
-                                <input type="text" class="form-control " id="categoria" name="categoria" require>
+                                <label for="" class="form-label">Categoria</label>
+                                <input type="text" class="form-control " id="categoria" name="categoria" required>
                             </div>
                             <div class="col-5">
-                                <label for="" class="form-label">stock</label>
-                                <input type="number" class="form-control " onkeypress="return isNumberKey(this);" id="stock" name="stock" require>
+                                <label for="" class="form-label">Stock</label>
+                                <input type="number" class="form-control " onkeypress="return isNumberKey(this);" id="stock" name="stock" required>
                             </div>
-
+                            <div class="col-5">
+                                <label for="" class="form-label">Fecha</label>
+                                <input type="date" value="<?php echo date("Y-m-d") ?>" class="form-control " id="fecha" name="fecha" required>
+                            </div>
                         </form>
                     </div>
                 </div>
                 <div class=" modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-
                     <button type="button" id="crear" class="btn btn-primary" data-bs-dismiss="modal">Crear</button>
                     <button type="button" id="update" class="btn btn-success" data-bs-dismiss="modal">editar</button>
                 </div>
@@ -132,6 +133,13 @@
 </body>
 <script>
     document.querySelector("#nuevo").addEventListener("click", () => {
+        document.getElementById('nombre_producto').value = ""
+        document.getElementById('referencia').value = ""
+        document.getElementById('precio').value = ""
+        document.getElementById('peso').value = ""
+        document.getElementById('categoria').value = ""
+        document.getElementById('stock').value = ""
+
         const myModal = new bootstrap.Modal(document.getElementById('myModal'))
         myModal.show();
         if (document.getElementById('crear')) {
@@ -140,6 +148,7 @@
                 document.getElementById('crear').classList.remove('d-none');
 
             }
+
         }
     });
     document.querySelectorAll('.editar').forEach((item, index) => {
@@ -149,11 +158,57 @@
             if (document.getElementById('update')) {
                 if (document.getElementById('update')) {
                     document.getElementById('update').classList.remove('d-none')
-                    document.getElementById('crear').classList.add('d-none');
+                    document.getElementById('crear').classList.add('d-none')
                 }
             }
+            data = item.getAttribute("id")
+            url = `http://localhost/prueba/products/find/${data}`;
+
+            axios.get(url).then((res) => {
+                let info = res.data
+                let id = info.id
+                let nombre_producto = document.getElementById('nombre_producto').value = info.nombre_producto
+                let referencia = document.getElementById('referencia').value = info.referencia
+                let precio = document.getElementById('precio').value = info.precio
+                let peso = document.getElementById('peso').value = info.peso
+                let categoria = document.getElementById('categoria').value = info.categoria
+                let stock = document.getElementById('stock').value = info.stock
+                let fecha = document.getElementById('fecha').value = info.fecha_creacion
+
+            })
+            document.getElementById("update").addEventListener("click", () => {
+                let nombre_producto = document.getElementById('nombre_producto').value
+                let referencia = document.getElementById('referencia').value
+                let precio = document.getElementById('precio').value
+                let peso = document.getElementById('peso').value
+                let categoria = document.getElementById('categoria').value
+                let stock = document.getElementById('stock').value
+                let fecha = document.getElementById('fecha').value
+                fetch('http://localhost/prueba/products/update', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: data,
+                        nombre_producto,
+                        referencia,
+                        precio,
+                        peso,
+                        categoria,
+                        stock,
+                        fecha
+                    }),
+                    headers: {
+                        'Content-type': 'application/json; charset=UTF-8',
+                    }
+                }).then(function(response) {
+                    return response.json()
+                }).then(function(data) {
+                    console.log(data)
+                })
+                location.reload();
+            })
+
         })
-    });
+    })
 
     document.getElementById("crear").addEventListener("click", () => {
         let nombre_producto = document.getElementById('nombre_producto').value
@@ -181,6 +236,17 @@
             console.log(data)
         })
         location.reload();
+    })
+    document.querySelectorAll('.eliminar').forEach((item, index) => {
+        item.addEventListener('click', () => {
+            data = item.getAttribute("id")
+            fetch(`http://localhost/prueba/products/delete/${data}`).then(function(response) {
+                return response
+            }).then(function(data) {
+                console.log(data)
+            })
+            location.reload();
+        })
     })
 </script>
 

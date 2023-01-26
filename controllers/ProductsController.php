@@ -10,8 +10,9 @@ class ProductsController
     }
     public function find()
     {
-        $product = Product::findOne(2);
-        var_dump($product);
+        $data = $_GET['id'];
+        $product = Product::findOne($data);
+        echo json_encode($product);
     }
     public function create()
     {
@@ -30,19 +31,24 @@ class ProductsController
 
     public function update()
     {
-        $product = Product::findOne(2);
-        $product->nombre_producto = "agua";
-        $product->referencia = "16b3f6";
-        $product->precio = "4500";
-        $product->peso = "8";
-        $product->categoria = "bebida";
-        $product->stock = "200";
-        $product->fecha_creacion = "2023-01-08";
+        $data = json_decode(file_get_contents('php://input'));
+
+        $product = new Product();
+        $product->id = $data->id;
+        $product->nombre_producto = $data->nombre_producto;
+        $product->referencia = $data->referencia;
+        $product->precio = $data->precio;
+        $product->peso = $data->peso;
+        $product->categoria = $data->categoria;
+        $product->stock = $data->stock;
+        $product->fecha_creacion = $data->fecha;
         $product->update();
     }
     public function delete()
     {
-        $product = Product::findOne(5);
+        $data = $_GET['id'];
+        $product = new Product();
+        $product->id = $data;
         $product->delete();
     }
 }
