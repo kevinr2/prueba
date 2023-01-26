@@ -7,10 +7,10 @@
 
 ## url inventario
 
-http://localhost/prueba/products/
+- http://localhost/prueba/products/
 
 ## url venta
 
-http://localhost/prueba/venta/
+- http://localhost/prueba/venta/
 
 Muchas Gracias
